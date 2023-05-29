@@ -15,7 +15,7 @@ Compiling it is not recommended, as it can mean slow times for launching it, It 
 * Just run it through the terminal!
 * Support for Discord Rich Presence - Show's what game your in.
 * No .ROBLOSECURITY Cookie needed, Just enter the GameID And have fun!
-* File modification - Re-add the old death sound!
+* File modification - Re-add the old death sound, Force future is bright and more!
 
 ## Discord Rich Presence
 [![Discord Rich Presence](https://cdn.discordapp.com/attachments/1102624372050632725/1112424425166475426/D2kF5UM.png)](https://cdn.discordapp.com/attachments/1102624372050632725/1112424425166475426/D2kF5UM.png)
