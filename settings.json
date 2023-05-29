@@ -1,6 +1,7 @@
 {
     "asktoaccesssettings": false,
-    "waittime": 15,
+    "waittime": 10,
+    "disgardlauncher": 10,
     "futureisbright": false,
     "games": {
         "neo warfare x": 501396354,
