@@ -51,7 +51,9 @@ with open(
     if data["asktoaccesssettings"] == False:
         pass
     elif data["asktoaccesssettings"] == True:
-        settings = input("[>] Do you want to access settings?: ").lower()
+        settings = input(
+            "[>] Do you want to access settings? This will not be shown again unless toggled manually: "
+        ).lower()
         if settings == "y" or settings == "yes":
             setsy = input("[>] Settings available.\n[>] 1.Enable old oof: ")
             if setsy == "1":
@@ -85,12 +87,14 @@ if not os.path.exists(f"{sysdrive}\\Users\\{os.getlogin()}\\AppData\\Local\\Robl
     ).lower()
     if TermiBloxinstall == "y" or TermiBloxinstall == "yes":
         print("[>] Roblox is being installed, Standby.")
-        bootstrapper = requests.get("http://setup.roblox.com/RobloxPlayerLauncher.exe")
+        bootstrapper = requests.get("http://setup.rbxcdn.com/Roblox.exe")
         with open("RobloxPlayerLauncher.exe", "wb") as nbs:
             nbs.write(bootstrapper.content)
             nbs.close()
             os.system(f"{currentpath}\\RobloxPlayerLauncher.exe")
-            print("[>] Roblox installed. Relaunch \x1b[36mTermiBlox\x1b[39m.")
+            print(
+                "[>] Roblox has successfuly installed. Relaunch \x1b[36mTermiBlox\x1b[39m."
+            )
             exit()
     elif TermiBloxinstall == "n" or TermiBloxinstall == "no":
         exit()
@@ -99,7 +103,7 @@ elif not os.path.exists(
     f"{sysdrive}\\Users\\{os.getlogin()}\\AppData\\Local\\Roblox\\Versions\\{version}"
 ) and os.path.exists(f"{sysdrive}\\Users\\{os.getlogin()}\\AppData\\Local\\Roblox"):
     TermiBloxupdate = input(
-        f"\x1b[31mERR\x1b[39m\n[>] Update check information | Your roblox version is not updated, And the latest is {userversion}. TermiBlox can auto update for you. Do you want to update roblox?: "
+        f"\x1b[31mERR\x1b[39m\n[>] Your current version appears to no longer be the newest version. Would you like to update to {version}?: "
     )
     if TermiBloxupdate == "y" or TermiBloxupdate == "yes":
         robloxplayerlauncher = requests.get(
@@ -138,6 +142,7 @@ keystroke = input(
     "[>] Welcome to TermiBlox! Enter the PlaceID/Name of the game you want to join: "
 ).lower()
 
+
 # gameinfo
 
 if keystroke.isdigit():
@@ -153,6 +158,15 @@ if keystroke.isdigit():
     GAMECREATOR = requests.get(
         f"https://games.roblox.com/v1/games?universeIds={UID}"
     ).json()["data"][0]["creator"]["name"]
+elif keystroke == ":l":
+    print(
+        "[>] Games available to be joined by their names are: "
+        + ", ".join(data["games"])
+        + ".",
+        end=" ",
+    )
+    input()
+    exit()
 else:
     UID = requests.get(
         f"https://apis.roblox.com/universes/v1/places/"
@@ -181,20 +195,37 @@ else:
 print(f"[>] Starting roblox. Game: {GAMENAME}")
 
 
+def checkifrunning(app_name):
+    for process in psutil.process_iter():
+        if process.name() == app_name:
+            return True
+    return False
+
+
 StartTime = time.time()
+
+# let roblox have enough time to launch.
+
+time.sleep(data["waittime"])
 
 RPC.connect()
 
 # this method is probably really bad, but its just what im going to leave in for now, dont fix it if it works ;)
 
 while True:
-    if keystroke.isdigit():
+    if (
+        not checkifrunning("RobloxPlayerBeta.exe")
+        or time.time() < data["disregardlauncher"]
+        and not checkifrunning("RobloxPlayerLauncher.exe")
+    ):
+        exit()
+    elif keystroke.isdigit():
         RPC.update(
             details=GAMENAME,
             state=f"by {GAMECREATOR}",
             large_image=GAMETHUMBNAIL,
             large_text="TermiBlox Launcher",
-            start=StartTime,
+            start=StartTime + 5,
             buttons=[
                 {
                     "label": f"Join",
@@ -212,7 +243,7 @@ while True:
             state=f"by {GAMECREATOR}",
             large_image=GAMETHUMBNAIL,
             large_text="TermiBlox Launcher",
-            start=StartTime,
+            start=StartTime + 5,
             buttons=[
                 {
                     "label": f"Join",
@@ -226,4 +257,4 @@ while True:
                 },
             ],
         )
-    time.sleep(15)
+    time.sleep(5)
