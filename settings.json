@@ -1,5 +1,7 @@
 {
     "asktoaccesssettings": false,
+    "waittime": 10,
+    "disregardlauncher": 10,
     "futureisbright": false,
     "games": {
         "neo warfare x": 501396354,
@@ -12,7 +14,9 @@
         "ptfs": 20321167,
         "mm2": 142823291,
         "pls donate": 8737602449,
-        "build a boat for treasure": 537413528
+        "build a boat for treasure": 537413528,
+        "jenga": 2537430692,
+        "vr hands": 4832438542,
+        "mortem metallum": 4169490976
     }
 }
-
