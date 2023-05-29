@@ -17,6 +17,8 @@ print(art)
 import requests, webbrowser, os, pathlib, ctypes, time, json, psutil
 from pypresence import Presence
 
+sysdrive = os.environ["SystemDrive"]
+
 client_id = "721829916731113503"
 RPC = Presence(client_id)
 
@@ -29,10 +31,11 @@ userversion = requests.get("https://setup.rbxcdn.com/version").text.replace(
     "version-", ""
 )
 
-if not os.path.exists(f"C:\\Users\\{os.getlogin()}\\AppData\\Local\\TermiBlox"):
-    os.mkdir(f"C:\\Users\\{os.getlogin()}\\AppData\\Local\\TermiBlox")
+if not os.path.exists(f"{sysdrive}\\Users\\{os.getlogin()}\\AppData\\Local\\TermiBlox"):
+    os.mkdir(f"{sysdrive}\\Users\\{os.getlogin()}\\AppData\\Local\\TermiBlox")
     with open(
-        f"C:\\Users\\{os.getlogin()}\\AppData\\Local\\TermiBlox\\settings.json", "w"
+        f"{sysdrive}\\Users\\{os.getlogin()}\\AppData\\Local\\TermiBlox\\settings.json",
+        "w",
     ) as jsoncontent:
         jsoncontent.write(
             requests.get(
@@ -41,7 +44,7 @@ if not os.path.exists(f"C:\\Users\\{os.getlogin()}\\AppData\\Local\\TermiBlox"):
         )
 
 with open(
-    f"C:\\Users\\{os.getlogin()}\\AppData\\Local\\TermiBlox\\settings.json", "r"
+    f"{sysdrive}\\Users\\{os.getlogin()}\\AppData\\Local\\TermiBlox\\settings.json", "r"
 ) as file:
     data = json.load(file)
 
@@ -60,7 +63,7 @@ with open(
                     ODG.close()
                     os.replace(
                         "OldDeath.ogg",
-                        f"C:\\Users\\{os.getlogin()}\\AppData\\Local\\Roblox\\Versions\\{version}\\content\\sounds\\ouch.ogg",
+                        f"{sysdrive}\\Users\\{os.getlogin()}\\AppData\\Local\\Roblox\\Versions\\{version}\\content\\sounds\\ouch.ogg",
                     )
             else:
                 pass
@@ -75,7 +78,7 @@ print(
     end=" ",
 )
 
-if not os.path.exists(f"C:\\Users\\{os.getlogin()}\\AppData\\Local\\Roblox"):
+if not os.path.exists(f"{sysdrive}\\Users\\{os.getlogin()}\\AppData\\Local\\Roblox"):
     print("\x1b[31mERR\x1b[39m")
     TermiBloxinstall = input(
         "[>] Roblox is not installed on your system, \x1b[36mTermiBlox\x1b[39m can automatically install it for you. Do you want to install Roblox?: "
@@ -93,8 +96,8 @@ if not os.path.exists(f"C:\\Users\\{os.getlogin()}\\AppData\\Local\\Roblox"):
         exit()
 
 elif not os.path.exists(
-    f"C:\\Users\\{os.getlogin()}\\AppData\\Local\\Roblox\\Versions\\{version}"
-) and os.path.exists(f"C:\\Users\\{os.getlogin()}\\AppData\\Local\\Roblox"):
+    f"{sysdrive}\\Users\\{os.getlogin()}\\AppData\\Local\\Roblox\\Versions\\{version}"
+) and os.path.exists(f"{sysdrive}\\Users\\{os.getlogin()}\\AppData\\Local\\Roblox"):
     TermiBloxupdate = input(
         f"\x1b[31mERR\x1b[39m\n[>] Update check information | Your roblox version is not updated, And the latest is {userversion}. TermiBlox can auto update for you. Do you want to update roblox?: "
     )
@@ -111,13 +114,13 @@ elif not os.path.exists(
 
 if data["futureisbright"] == True:
     if not os.path.exists(
-        f"C:\\Users\\{os.getlogin()}\\AppData\\Local\\Roblox\\Versions\\{version}\\ClientSettings"
+        f"{sysdrive}\\Users\\{os.getlogin()}\\AppData\\Local\\Roblox\\Versions\\{version}\\ClientSettings"
     ):
         os.mkdir(
-            f"C:\\Users\\{os.getlogin()}\\AppData\\Local\\Roblox\\Versions\\{version}\\ClientSettings"
+            f"{sysdrive}\\Users\\{os.getlogin()}\\AppData\\Local\\Roblox\\Versions\\{version}\\ClientSettings"
         )
     with open(
-        f"C:\\Users\\{os.getlogin()}\\AppData\\Local\\Roblox\\Versions\\{version}\\ClientSettings\\ClientAppSettings.json",
+        f"{sysdrive}\\Users\\{os.getlogin()}\\AppData\\Local\\Roblox\\Versions\\{version}\\ClientSettings\\ClientAppSettings.json",
         "w",
     ) as clientsettings:
         clientsettings.write(
