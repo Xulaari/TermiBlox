@@ -103,7 +103,7 @@ elif not os.path.exists(
     f"{sysdrive}\\Users\\{os.getlogin()}\\AppData\\Local\\Roblox\\Versions\\{version}"
 ) and os.path.exists(f"{sysdrive}\\Users\\{os.getlogin()}\\AppData\\Local\\Roblox"):
     TermiBloxupdate = input(
-        f"\x1b[31mERR\x1b[39m\n[>] Your current version appears to no longer be the newest version. Would you like to update to {version}?: "
+        f"\x1b[31mERR\x1b[39m\n[>] Your current version appears to no longer be the newest version. Would you like to update to the latest version, {userversion}?: "
     )
     if TermiBloxupdate == "y" or TermiBloxupdate == "yes":
         robloxplayerlauncher = requests.get(
@@ -141,7 +141,6 @@ print("\x1b[32mOK\x1b[39m")
 keystroke = input(
     "[>] Welcome to TermiBlox! Enter the PlaceID/Name of the game you want to join: "
 ).lower()
-
 
 # gameinfo
 
@@ -183,7 +182,7 @@ else:
         f"https://games.roblox.com/v1/games?universeIds={UID}"
     ).json()["data"][0]["creator"]["name"]
 
-## launch
+# launch
 
 if keystroke.isdigit():
     webbrowser.open(f"roblox://experiences/start?placeId={keystroke}")
