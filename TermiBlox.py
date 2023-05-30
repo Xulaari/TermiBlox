@@ -14,10 +14,10 @@ art = """\x1b[36m     s                                                   .     
 
 print(art)
 
-import requests, webbrowser, os, pathlib, ctypes, time, json, psutil
+import requests, webbrowser, os, pathlib, ctypes, time, json, psutil, glob
 from pypresence import Presence
 
-sysdrive = os.environ["SystemDrive"]
+localappdata = os.environ["localappdata"]
 
 client_id = "721829916731113503"
 RPC = Presence(client_id)
@@ -31,10 +31,10 @@ userversion = requests.get("https://setup.rbxcdn.com/version").text.replace(
     "version-", ""
 )
 
-if not os.path.exists(f"{sysdrive}\\Users\\{os.getlogin()}\\AppData\\Local\\TermiBlox"):
-    os.mkdir(f"{sysdrive}\\Users\\{os.getlogin()}\\AppData\\Local\\TermiBlox")
+if not os.path.exists(f"{localappdata}\\TermiBlox"):
+    os.mkdir(f"{localappdata}\\TermiBlox")
     with open(
-        f"{sysdrive}\\Users\\{os.getlogin()}\\AppData\\Local\\TermiBlox\\settings.json",
+        f"{localappdata}\\TermiBlox\\settings.json",
         "w",
     ) as jsoncontent:
         jsoncontent.write(
@@ -43,9 +43,7 @@ if not os.path.exists(f"{sysdrive}\\Users\\{os.getlogin()}\\AppData\\Local\\Term
             ).text
         )
 
-with open(
-    f"{sysdrive}\\Users\\{os.getlogin()}\\AppData\\Local\\TermiBlox\\settings.json", "r"
-) as file:
+with open(f"{localappdata}\\TermiBlox\\settings.json", "r") as file:
     data = json.load(file)
 
     if data["asktoaccesssettings"] == False:
@@ -65,7 +63,7 @@ with open(
                     ODG.close()
                     os.replace(
                         "OldDeath.ogg",
-                        f"{sysdrive}\\Users\\{os.getlogin()}\\AppData\\Local\\Roblox\\Versions\\{version}\\content\\sounds\\ouch.ogg",
+                        f"{localappdata}\\Roblox\\Versions\\{version}\\content\\sounds\\ouch.ogg",
                     )
             else:
                 pass
@@ -74,23 +72,23 @@ with open(
 
 currentpath = str(pathlib.Path(__file__).parent.absolute())
 
-print(f"[>] TermiBlox folder located at: \x1b[32m{cwd}\x1b[39m")
+print(f"[>] TermiBlox located at: \x1b[32m{currentpath}\x1b[39m")
+
 print(
     f"[>] Roblox version located as: \x1b[32m{userversion}\x1b[39m. Standby for update check |",
     end=" ",
 )
 
-if not os.path.exists(f"{sysdrive}\\Users\\{os.getlogin()}\\AppData\\Local\\Roblox"):
-    print("\x1b[31mERR\x1b[39m")
+if not os.path.exists(f"{localappdata}\\Roblox"):
     TermiBloxinstall = input(
-        "[>] Roblox is not installed on your system, \x1b[36mTermiBlox\x1b[39m can automatically install it for you. Do you want to install Roblox?: "
+        "\x1b[31mERR\x1b[39m\n[>] Roblox is not installed on your system, \x1b[36mTermiBlox\x1b[39m can automatically install it for you. Do you want to install Roblox?: "
     ).lower()
     if TermiBloxinstall == "y" or TermiBloxinstall == "yes":
         print("[>] Roblox is being installed, Standby.")
         bootstrapper = requests.get("http://setup.rbxcdn.com/Roblox.exe")
-        with open("RobloxPlayerLauncher.exe", "wb") as nbs:
-            nbs.write(bootstrapper.content)
-            nbs.close()
+        with open("RobloxPlayerLauncher.exe", "wb") as robloxlauncher:
+            robloxlauncher.write(bootstrapper.content)
+            robloxlauncher.close()
             os.system(f"{currentpath}\\RobloxPlayerLauncher.exe")
             print(
                 "[>] Roblox has successfuly installed. Relaunch \x1b[36mTermiBlox\x1b[39m."
@@ -100,10 +98,10 @@ if not os.path.exists(f"{sysdrive}\\Users\\{os.getlogin()}\\AppData\\Local\\Robl
         exit()
 
 elif not os.path.exists(
-    f"{sysdrive}\\Users\\{os.getlogin()}\\AppData\\Local\\Roblox\\Versions\\{version}"
-) and os.path.exists(f"{sysdrive}\\Users\\{os.getlogin()}\\AppData\\Local\\Roblox"):
+    f"{localappdata}\\Roblox\\Versions\\{version}"
+) and os.path.exists(f"{localappdata}\\Roblox"):
     TermiBloxupdate = input(
-        f"\x1b[31mERR\x1b[39m\n[>] Your current version appears to no longer be the newest version. Would you like to update to the latest version, {userversion}?: "
+        f"\x1b[31mERR\x1b[39m\n[>] The version of the newest roblox version is different to the version you currently have installed.\n[>] Would you like to upgrade your currently installed version?: "
     )
     if TermiBloxupdate == "y" or TermiBloxupdate == "yes":
         robloxplayerlauncher = requests.get(
@@ -118,13 +116,11 @@ elif not os.path.exists(
 
 if data["futureisbright"] == True:
     if not os.path.exists(
-        f"{sysdrive}\\Users\\{os.getlogin()}\\AppData\\Local\\Roblox\\Versions\\{version}\\ClientSettings"
+        f"{localappdata}\\Roblox\\Versions\\{version}\\ClientSettings"
     ):
-        os.mkdir(
-            f"{sysdrive}\\Users\\{os.getlogin()}\\AppData\\Local\\Roblox\\Versions\\{version}\\ClientSettings"
-        )
+        os.mkdir(f"{localappdata}\\Roblox\\Versions\\{version}\\ClientSettings")
     with open(
-        f"{sysdrive}\\Users\\{os.getlogin()}\\AppData\\Local\\Roblox\\Versions\\{version}\\ClientSettings\\ClientAppSettings.json",
+        f"{localappdata}\\Roblox\\Versions\\{version}\\ClientSettings\\ClientAppSettings.json",
         "w",
     ) as clientsettings:
         clientsettings.write(
@@ -207,7 +203,49 @@ StartTime = time.time()
 
 time.sleep(data["waittime"])
 
+# thank you stackoverflow for this
+# we just extract the jobid by looking at the most recent file,
+# then we will index jobid and status, takeaway from them and boom.
+
+files = os.listdir(f"C:\\Users\\{os.getlogin()}\\AppData\\Local\\Roblox\\logs")
+paths = [
+    os.path.join(f"C:\\Users\\{os.getlogin()}\\AppData\\Local\\Roblox\\logs", basename)
+    for basename in files
+]
+
+newest = max(paths, key=os.path.getctime)
+
+with open(newest, "r") as log:
+    logfile = log.read()
+    startIndex = logfile.index("jobId")
+    endIndex = logfile.index("status")
+
+jobId = logfile[startIndex + 8 : endIndex - 3]
+
 RPC.connect()
+
+if data["letpeoplejoinme"] == False and keystroke.isdigit():
+    joinexperience = f"roblox://experiences/start?placeId={keystroke}"
+elif data["letpeoplejoinme"] == True and keystroke.isdigit():
+    joinexperience = (
+        f"roblox://experiences/start?placeId={keystroke}&gameInstanceId={jobId}"
+    )
+elif data["letpeoplejoinme"] == False and not keystroke.isdigit():
+    joinexperience = f"roblox://experiences/start?placeId=" + str(
+        data["games"][keystroke]
+    )
+elif data["letpeoplejoinme"] == True and not keystroke.isdigit():
+    joinexperience = (
+        f"roblox://experiences/start?placeId="
+        + str(data["games"][keystroke])
+        + f"&gameInstanceId={jobId}"
+    )
+
+if keystroke.isdigit():
+    gamepage = f"https://www.roblox.com/games/{keystroke}"
+else:
+    gamepage = "https://www.roblox.com/games/" + str(data["games"][keystroke])
+
 
 # this method is probably really bad, but its just what im going to leave in for now, dont fix it if it works ;)
 
@@ -218,24 +256,6 @@ while True:
         and not checkifrunning("RobloxPlayerLauncher.exe")
     ):
         exit()
-    elif keystroke.isdigit():
-        RPC.update(
-            details=GAMENAME,
-            state=f"by {GAMECREATOR}",
-            large_image=GAMETHUMBNAIL,
-            large_text="TermiBlox Launcher",
-            start=StartTime + 5,
-            buttons=[
-                {
-                    "label": f"Join",
-                    "url": f"roblox://experiences/start?placeId={keystroke}",
-                },
-                {
-                    "label": "See Details",
-                    "url": f"https://www.roblox.com/games/{keystroke}",
-                },
-            ],
-        )
     else:
         RPC.update(
             details=GAMENAME,
@@ -246,13 +266,11 @@ while True:
             buttons=[
                 {
                     "label": f"Join",
-                    "url": "roblox://experiences/start?placeId="
-                    + str(data["games"][keystroke]),
+                    "url": joinexperience,
                 },
                 {
                     "label": "See Details",
-                    "url": "https://www.roblox.com/games/"
-                    + str(data["games"][keystroke]),
+                    "url": gamepage,
                 },
             ],
         )
